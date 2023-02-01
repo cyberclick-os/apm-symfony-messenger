@@ -48,6 +48,10 @@ final class ApmMiddleware implements MiddlewareInterface
             //nothing
         }
 
+        if($this->elasticApmTracer->getTransactionPoolCount() > 20){
+            return $stack->next()->handle($envelope, $stack);
+        }
+
         $transaction = $this->elasticApmTracer->startTransaction(
             $name,
             'message'
